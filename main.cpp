@@ -28,6 +28,10 @@ int main() {
     list<string> lst;
     set<string> st;
 
+    // 3D array stores execution times for all simulations.
+    // Each 2D slice represents one simulation.
+    // Rows represent the four operations.
+    // Columns represent vector, list, and set.
     long long results[SIMULATIONS][4][3] = {};
     vector<string> operations = {
         "Reading", "Sorting", "Inserting", "Deleting"
@@ -65,7 +69,7 @@ int main() {
 vector<long long> reading_race(vector<string>& vec, list<string>& lst, set<string>& st) {
     ifstream fin("codes.txt");
     if (!fin) {
-        cout << "Error opeing codes.txt" << endl;
+        cout << "Error opening codes.txt" << endl;
         exit(1);
     }
 
@@ -123,7 +127,7 @@ vector<long long> reading_race(vector<string>& vec, list<string>& lst, set<strin
     // end timing
     end = high_resolution_clock::now();
 
-    // calulate duration
+    // calculate duration
     duration = duration_cast<nanoseconds>(end - start);
     setTime = duration.count();
 
@@ -162,7 +166,7 @@ vector<long long> sorting_race(vector<string>& vec, list<string>& lst) {
     long long listTime = duration.count();
 
     // set is already sorted
-    return {vecTime, listTime, -1};
+    return {vecTime, listTime, 0};
 }
 
 // inserting TESTCODE into each container
@@ -174,7 +178,7 @@ vector<long long> inserting_race(vector<string>& vec, list<string>& lst, set<str
     // start timing
     auto start = high_resolution_clock::now();
 
-    // instert code into middle
+    // insert code into middle
     vec.insert(vec.begin() + middle, "TESTCODE");
 
     // end timing
@@ -217,7 +221,7 @@ vector<long long> inserting_race(vector<string>& vec, list<string>& lst, set<str
     return {vecTime, listTime, setTime};
 }
 
-// delete from middle element from each container
+// delete the middle element from each container
 vector<long long> deleting_race(vector<string>& vec, list<string>& lst, set<string>& st) {
 
     // find middle of vector
@@ -283,6 +287,7 @@ void display_results(const long long results[SIMULATIONS][4][3], const vector<st
          << setw(12) << "List"
          << setw(12) << "Set" << endl;
 
+    
     for (int op = 0; op < 4; op++) {
         
         cout << setw(12) << operations[op];
