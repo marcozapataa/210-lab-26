@@ -276,25 +276,28 @@ vector<long long> deleting_race(vector<string>& vec, list<string>& lst, set<stri
 // display results in a formatted table
 void display_results(const long long results[SIMULATIONS][4][3], const vector<string>& operations) {
 
-    cout << "\nRace Results (nanoseconds)\n";
+    cout << "Number of simulations: " << SIMULATIONS << endl;
 
-    cout << left << setw(15) << "Operation"
-         << setw(15) << "Vector"
-         << setw(15) << "List"
-         << setw(15) << "Set" << endl;
+    cout << setw(12) << "Operation"
+         << setw(12) << "Vector"
+         << setw(12) << "List"
+         << setw(12) << "Set" << endl;
 
-     for (int i = 0; i < 4; i++) {
-        cout << right << setw(12) << operations[i];
+    for (int op = 0; op < 4; op++) {
+        
+        cout << setw(12) << operations[op];
 
-        for (int j = 0; j < 3; j++) {
+        for (int container = 0; container < 3; container++) {
+
             long long total = 0;
 
-            for (int k = 0; k < SIMULATIONS; k++) {
-                total += results[k][i][j];
+            for (int sim = 0; sim < SIMULATIONS; sim++) {
+                total += results[sim][op][container];
             }
-                
-            cout << setw(12) << total / SIMULATIONS;
 
+            long long average = total / SIMULATIONS;
+
+            cout <<setw(12) << average;
         }
         cout << endl;
     }
