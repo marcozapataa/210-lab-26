@@ -12,12 +12,14 @@
 using namespace std;
 using namespace std::chrono;
 
+const int SIMULATIONS = 15;
+
 // function prototypes
 vector<long long> reading_race(vector<string>& vec, list<string>& lst, set<string>& st);
 vector<long long> sorting_race(vector<string>& vec, list<string>& lst);
 vector<long long> inserting_race(vector<string>& vec, list<string>& lst, set<string>& st);
 vector<long long> deleting_race(vector<string>& vec, list<string>& lst, set<string>& st);
-void display_results(const vector<vector<long long>>& results, const vector<string>& operations);
+void display_results(const long long results[SIMULATIONS][4][3], const vector<string>& operations);
 
 
 int main() {
@@ -26,16 +28,31 @@ int main() {
     list<string> lst;
     set<string> st;
 
-    vector<vector<long long>> results;
+    long long results[SIMULATIONS][4][3] = {};
     vector<string> operations = {
         "Reading", "Sorting", "Inserting", "Deleting"
     };
 
     // run races and store results
-    results.push_back(reading_race(vec, lst, st));
-    results.push_back(sorting_race(vec, lst));
-    results.push_back(inserting_race(vec, lst, st));
-    results.push_back(deleting_race(vec, lst, st));
+    for (int sim = 0; sim < SIMULATIONS; sim++) {
+
+        vec.clear();
+        lst.clear();
+        st.clear();
+
+        vector<long long> reading = reading_race(vec, lst, st);
+        vector<long long> sorting = sorting_race(vec, lst);
+        vector<long long> inserting = inserting_race(vec, lst, st);
+        vector<long long> deleting = deleting_race(vec, lst, st);
+
+        for (int i = 0; i < 3; i++) {
+            results[sim][0][i] = reading[i];
+            results[sim][1][i] = sorting[i];
+            results[sim][2][i] = inserting[i];
+            results[sim][3][i] = deleting[i];
+
+        }
+    }
 
     // display results
     display_results(results, operations);
@@ -257,7 +274,7 @@ vector<long long> deleting_race(vector<string>& vec, list<string>& lst, set<stri
 }
 
 // display results in a formatted table
-void display_results(const vector<vector<long long>>& results, const vector<string>& operations) {
+void display_results(const long long results[SIMULATIONS][4][3], const vector<string>& operations) {
 
     cout << "\nRace Results (nanoseconds)\n";
 
@@ -266,13 +283,19 @@ void display_results(const vector<vector<long long>>& results, const vector<stri
          << setw(15) << "List"
          << setw(15) << "Set" << endl;
 
-     for (size_t i = 0; i < results.size(); i++) {
-        cout << left << setw(15) << operations[i];
+     for (int i = 0; i < 4; i++) {
+        cout << right << setw(12) << operations[i];
 
-        for (size_t j = 0; j < results[i].size(); j++) {
-            cout << setw(15) << results[i][j];
+        for (int j = 0; j < 3; j++) {
+            long long total = 0;
+
+            for (int k = 0; k < SIMULATIONS; k++) {
+                total += results[k][i][j];
+            }
+                
+            cout << setw(12) << total / SIMULATIONS;
+
         }
-
         cout << endl;
     }
 }
